@@ -29,7 +29,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
@@ -224,7 +224,6 @@ namespace System.Data.Common {
 
 		public virtual Stream GetStream (int i)
 		{
-
 			long offset = 0L;
 			byte [] buffer = new byte [1024 * 8];
 			long read;
@@ -240,7 +239,7 @@ namespace System.Data.Common {
 		public virtual TextReader GetTextReader (int i)
 		{
 			String value;
-			if (IsDBNull (i))
+			if (this.IsDBNull (i))
 				value = string.Empty;
 			else
 				value = this.GetString (i);

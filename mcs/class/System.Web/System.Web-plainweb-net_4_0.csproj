@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{07F1690D-4374-4A73-9C8B-E606AF372FF3}</ProjectGuid>
+    <ProjectGuid>{6CC04C44-1378-4502-B134-FE6D46B1A4B4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoWarn>1699,612,618,618</NoWarn>
-    <OutputPath>./../../class/lib/net_4_0/plainweb</OutputPath>
+    <OutputPath>bin\Debug\System.Web-net_4_5-1</OutputPath>
     <NoStdLib>True</NoStdLib>
     <NoConfig>True</NoConfig>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -16,7 +16,7 @@
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>System.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <NoWarn>1699,612,618,618</NoWarn>
     <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;INSIDE_SYSTEM_WEB</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;INSIDE_SYSTEM_WEB;WEBSERVICES_DEP;MONOWEB_DEP;SYSTEMCORE_DEP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <NoWarn>1699,612,618,618</NoWarn>
     <Optimize>true</Optimize>
-    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;INSIDE_SYSTEM_WEB</DefineConstants>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;INSIDE_SYSTEM_WEB;WEBSERVICES_DEP;MONOWEB_DEP;SYSTEMCORE_DEP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -1287,6 +1287,7 @@
     <Compile Include="System.Web\HttpRuntime.cs" />
     <Compile Include="System.Web\HttpServerUtility.cs" />
     <Compile Include="System.Web\HttpStaticObjectsCollection.cs" />
+    <Compile Include="System.Web\HttpTaskAsyncHandler.cs" />
     <Compile Include="System.Web\HttpUnhandledException.cs" />
     <Compile Include="System.Web\HttpUtility.cs" />
     <Compile Include="System.Web\HttpValidationStatus.cs" />
@@ -1302,6 +1303,7 @@
     <Compile Include="System.Web\InputFilterStream.cs" />
     <Compile Include="System.Web\IntPtrStream.cs" />
     <Compile Include="System.Web\IPartitionResolver.cs" />
+    <Compile Include="System.Web\MimeMapping.cs" />
     <Compile Include="System.Web\MimeTypes.cs" />
     <Compile Include="System.Web\NoParamsInvoker.cs" />
     <Compile Include="System.Web\OutputFilterStream.cs" />
@@ -1313,6 +1315,7 @@
     <Compile Include="System.Web\ProcessShutdownReason.cs" />
     <Compile Include="System.Web\ProcessStatus.cs" />
     <Compile Include="System.Web\QueueManager.cs" />
+    <Compile Include="System.Web\ReadEntityBodyMode.cs" />
     <Compile Include="System.Web\RequestNotification.cs" />
     <Compile Include="System.Web\RequestNotificationStatus.cs" />
     <Compile Include="System.Web\ServerVariablesCollection.cs" />
@@ -1332,6 +1335,9 @@
     <Compile Include="System.Web\TraceData.cs" />
     <Compile Include="System.Web\TraceManager.cs" />
     <Compile Include="System.Web\TraceMode.cs" />
+    <Compile Include="System.Web\UnvalidatedRequestValues.cs" />
+    <Compile Include="System.Web\UnvalidatedRequestValuesBase.cs" />
+    <Compile Include="System.Web\UnvalidatedRequestValuesWrapper.cs" />
     <Compile Include="System.Web\VirtualPath.cs" />
     <Compile Include="System.Web\VirtualPathUtility.cs" />
     <Compile Include="System.Web\WebCategoryAttribute.cs" />
@@ -1339,7 +1345,8 @@
     <Compile Include="System.Web\WebROCollection.cs" />
     <Compile Include="System.Web\WebSysDescriptionAttribute.cs" />
     <Compile Include="System.Web\XmlSiteMapProvider.cs" />
-    <Compile Include="System.Web\UplevelHelper.cs" />  </ItemGroup>
+    <Compile Include="System.Web\UplevelHelper.cs" />
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -1348,64 +1355,64 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">
-
+    <PreBuildEvent>
     </PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">
-
-    </PreBuildEvent>
-
-    <PostBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">
-
-    </PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">
-
-    </PostBuildEvent>
+    <PostBuildEvent>
+      xcopy $(TargetName).* $(ProjectDir)..\lib\net_4_5\ /Y /R /D
+  </PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../corlib/corlib-net_4_0.csproj">
-      <Project>{5889848E-305B-4B11-B3B1-A25761DAFE45}</Project>
-      <Name>corlib\corlib-net_4_0</Name>
+    <ProjectReference Include="..\corlib\corlib-net_4_5.csproj">
+      <Project>{07C1F58B-9E99-47F8-A847-79EDA5157DA8}</Project>
+      <Name>corlib\corlib-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../System/System-secxml-net_4_0.csproj">
-      <Project>{ED114F49-84B3-4EF9-80EC-90D4EEF7FF8E}</Project>
-      <Name>System\System-secxml-net_4_0</Name>
+    <ProjectReference Include="..\System\System-net_4_5-2.csproj">
+      <Project>{38FCD731-0E11-46F7-A31B-DCBE853AD8D7}</Project>
+      <Name>System\System-net_4_5-2</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.Core/System.Core-plaincore-net_4_0.csproj">
-      <Project>{2D5DF73B-C3E5-40E6-94DA-EE49231F1FB4}</Project>
-      <Name>System.Core\System.Core-plaincore-net_4_0</Name>
+    <ProjectReference Include="..\System.Drawing\System.Drawing-net_4_5.csproj">
+      <Project>{945A4FD5-2184-44CC-9519-13AFC37ED81A}</Project>
+      <Name>System.Drawing\System.Drawing-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.Drawing/System.Drawing-net_4_0.csproj">
-      <Project>{0320CF1C-6099-447E-8575-E19375FD69C1}</Project>
-      <Name>System.Drawing\System.Drawing-net_4_0</Name>
+    <ProjectReference Include="..\System.Data\System.Data-net_4_5.csproj">
+      <Project>{663D8C81-B74E-4D44-8C59-2264C6942B30}</Project>
+      <Name>System.Data\System.Data-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.Data/System.Data-net_4_0.csproj">
-      <Project>{F9CB6ED4-1F88-4C63-84BA-4A60E8E4CB9B}</Project>
-      <Name>System.Data\System.Data-net_4_0</Name>
+    <ProjectReference Include="..\System.XML\System.Xml-net_4_5-1.csproj">
+      <Project>{4ED6CCE8-8E8A-4D82-8BCA-3EA4D4203AA4}</Project>
+      <Name>System.XML\System.Xml-net_4_5-1</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.XML/System.Xml-bare-net_4_0.csproj">
-      <Project>{FB3BD508-7228-49CF-ADCA-F5D0C8E8ABCF}</Project>
-      <Name>System.XML\System.Xml-bare-net_4_0</Name>
+    <ProjectReference Include="..\System.EnterpriseServices\System.EnterpriseServices-net_4_5.csproj">
+      <Project>{20B32D23-8DD0-4291-A98F-C52A3E99DFE8}</Project>
+      <Name>System.EnterpriseServices\System.EnterpriseServices-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.EnterpriseServices/System.EnterpriseServices-net_4_0.csproj">
-      <Project>{CDF0A0D0-F531-43DC-AA85-BF46C557558D}</Project>
-      <Name>System.EnterpriseServices\System.EnterpriseServices-net_4_0</Name>
+    <ProjectReference Include="..\System.Runtime.Serialization.Formatters.Soap\System.Runtime.Serialization.Formatters.Soap-net_4_5.csproj">
+      <Project>{95593889-8509-4FFC-8EDE-C673FDA39FC8}</Project>
+      <Name>System.Runtime.Serialization.Formatters.Soap\System.Runtime.Serialization.Formatters.Soap-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.Runtime.Serialization.Formatters.Soap/System.Runtime.Serialization.Formatters.Soap-net_4_0.csproj">
-      <Project>{9206CB80-04F8-4C50-AFE6-D38D4B463AD7}</Project>
-      <Name>System.Runtime.Serialization.Formatters.Soap\System.Runtime.Serialization.Formatters.Soap-net_4_0</Name>
+    <ProjectReference Include="..\System.Configuration\System.Configuration-net_4_5.csproj">
+      <Project>{CA2CD67B-1308-460D-BDBA-498F63DEAA31}</Project>
+      <Name>System.Configuration\System.Configuration-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.Configuration/System.Configuration-net_4_0.csproj">
-      <Project>{41A642E0-E14A-4B75-B37B-28549F5536FC}</Project>
-      <Name>System.Configuration\System.Configuration-net_4_0</Name>
+    <ProjectReference Include="..\Mono.Data.Sqlite\Mono.Data.Sqlite-net_4_5.csproj">
+      <Project>{0ECDAF31-B581-4319-A1B3-1CDF1FF1BA0B}</Project>
+      <Name>Mono.Data.Sqlite\Mono.Data.Sqlite-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../Mono.Data.Sqlite/Mono.Data.Sqlite-net_4_0.csproj">
-      <Project>{ED82E2F3-5210-4BC1-B9BD-B37D44CCE407}</Project>
-      <Name>Mono.Data.Sqlite\Mono.Data.Sqlite-net_4_0</Name>
+    <ProjectReference Include="..\System.Web.ApplicationServices\System.Web.ApplicationServices-net_4_5.csproj">
+      <Project>{394BAC94-3126-4DAE-8C55-5547372BAB46}</Project>
+      <Name>System.Web.ApplicationServices\System.Web.ApplicationServices-net_4_5</Name>
     </ProjectReference>
-    <ProjectReference Include="../System.Web.ApplicationServices/System.Web.ApplicationServices-net_4_0.csproj">
-      <Project>{21BBD9A9-836A-4BF0-81EF-CAFE55B11226}</Project>
-      <Name>System.Web.ApplicationServices\System.Web.ApplicationServices-net_4_0</Name>
+    <ProjectReference Include="..\System.Web.Services\System.Web.Services-net_4_5.csproj">
+      <Project>{1CD96FCF-0288-4FA4-9451-47B0C2206186}</Project>
+      <Name>System.Web.Services\System.Web.Services-net_4_5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mono.Web\Mono.Web-net_4_5.csproj">
+      <Project>{82BD591A-1377-41BD-9B2C-1037574BB935}</Project>
+      <Name>Mono.Web\Mono.Web-net_4_5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.Core\System.Core-net_4_5.csproj">
+      <Project>{D8260595-C32F-4AC3-9C01-2CD2528CFA1D}</Project>
+      <Name>System.Core\System.Core-net_4_5</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -1579,4 +1586,3 @@
     </EmbeddedResource>
   </ItemGroup>
 </Project>
-
