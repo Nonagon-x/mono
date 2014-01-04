@@ -1,10 +1,8 @@
 //
-// System.Web.UnvalidatedRequestValues.cs
+// UnvalidatedRequestValues.cs
 //
-// Author:
-//   Mike Morano <mmorano@mikeandwan.us>
-//
-
+// Authors:
+//	Matthias Dittrich <matthi.d@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,39 +26,102 @@
 
 using System;
 using System.Collections.Specialized;
-
+using System.Runtime;
 
 namespace System.Web {
 	public sealed class UnvalidatedRequestValues {
-		public HttpCookieCollection Cookies { get; internal set; }
-		public HttpFileCollection Files { get; internal set; }
-		public NameValueCollection Form { get; internal set; }
-		public NameValueCollection Headers { get; internal set; }
-		public string Path { get; internal set; }
-		public string PathInfo { get; internal set; }
-		public NameValueCollection QueryString { get; internal set; }
-		public string RawUrl { get; internal set; }
-		public Uri Url { get; internal set; }
+		private readonly HttpRequest httpRequest;
+		private NameValueCollection headers;
 
-		public string this[string field] { 
-			get {
-				if (Form != null && Form [field] != null) {
-	                    		return Form [field];
-	                	}
+		public NameValueCollection Form
+		{
+			get
+			{
+				return httpRequest.FormUnvalidated;
+			}
+		}
 
-				if (Cookies != null && Cookies [field] != null) {
-	                		return Cookies [field].Value;
-	                	}
+		public NameValueCollection QueryString
+		{
+			get
+			{
+				return httpRequest.QueryStringUnvalidated;
+			}
+		}
 
-				if (QueryString != null && QueryString [field] != null) {
-	                		return QueryString [field];
-	                	}
+		public NameValueCollection Headers
+		{
+			get
+			{
+				return headers;
+			}
+		}
 
-	                	// msdn docs also suggest the ServerVariables are inspected by this indexer,
-	                	// but that seems odd given what is available in this class
+		public HttpCookieCollection Cookies
+		{
+			get
+			{
+				return httpRequest.CookiesNoValidation;
+			}
+		}
 
-	                	return null;
-	        	}
-	        }
+		public HttpFileCollection Files
+		{
+			get
+			{
+				return httpRequest.Files;
+			}
+		}
+
+		public string RawUrl
+		{
+			get
+			{
+				return httpRequest.RawUrlUnvalidated;
+			}
+		}
+
+		public string Path
+		{
+			get
+			{
+				return httpRequest.PathNoValidation;
+			}
+		}
+
+		public string PathInfo
+		{
+			get
+			{
+				return httpRequest.PathInfoNoValidation;
+			}
+		}
+
+		public string this [string field]
+		{
+			get
+			{
+				HttpCookie cookie;
+				return
+					Form [field] ??
+					((cookie = Cookies [field]) != null ? cookie.Value : null) ??
+					QueryString [field] ??
+					httpRequest.ServerVariables [field];
+			}
+		}
+
+		public Uri Url
+		{
+			get
+			{
+				return httpRequest.Url;
+			}
+		}
+
+		internal UnvalidatedRequestValues (HttpRequest request)
+		{
+			this.httpRequest = request;
+			this.headers = new HeadersCollection (httpRequest);
+		}
 	}
 }

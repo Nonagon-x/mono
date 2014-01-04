@@ -224,6 +224,10 @@ namespace System.Data.Common {
 
 		public virtual Stream GetStream (int i)
 		{
+<<<<<<< HEAD
+
+=======
+>>>>>>> f3fba5d... [API] Added a lot of missing implementations required for MVC5+EF6
 			long offset = 0L;
 			byte [] buffer = new byte [1024 * 8];
 			long read;
@@ -239,7 +243,11 @@ namespace System.Data.Common {
 		public virtual TextReader GetTextReader (int i)
 		{
 			String value;
+<<<<<<< HEAD
+			if (IsDBNull (i))
+=======
 			if (this.IsDBNull (i))
+>>>>>>> f3fba5d... [API] Added a lot of missing implementations required for MVC5+EF6
 				value = string.Empty;
 			else
 				value = this.GetString (i);

@@ -1,9 +1,8 @@
 //
 // ReadEntityBodyMode.cs
 //
-// Author: Martin Thwaites (github@my2cents.co.uk)
-//
-// Copyright (C) 2014 Martin Thwaites
+// Authors:
+//	Matthias Dittrich <matthi.d@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,12 +22,12 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+//
 namespace System.Web {
 	public enum ReadEntityBodyMode {
 		None,
 		Classic,
 		Bufferless,
 		Buffered,
- 	}
+	}
 }

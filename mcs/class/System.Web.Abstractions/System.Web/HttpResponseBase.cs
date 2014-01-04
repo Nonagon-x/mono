@@ -115,6 +115,9 @@ namespace System.Web
 #endif
 
 		public virtual bool TrySkipIisCustomErrors { get { NotImplemented (); return false; } set { NotImplemented (); } }
+#if NET_4_5
+		public virtual bool SuppressFormsAuthenticationRedirect { get { NotImplemented (); return false; } set { NotImplemented (); } }
+#endif
 
 
 		public virtual void AddCacheDependency (params CacheDependency [] dependencies)

@@ -95,9 +95,12 @@ namespace System.Web
 
 		WebROCollection form;
 		HttpFileCollection files;
-		
+
 		ServerVariablesCollection server_variables;
 		HttpClientCertificate client_cert;
+#if NET_4_5
+		UnvalidatedRequestValues unvalidatedRequestValues;
+#endif
 		
 		string request_type;
 		string [] accept_types;
@@ -332,7 +335,23 @@ namespace System.Web
 				browser_capabilities = value;
 			}
 		}
+#if NET_4_5
+		public UnvalidatedRequestValues Unvalidated
+		{
+			get
+			{
+				if (this.unvalidatedRequestValues == null)
+					this.unvalidatedRequestValues = new UnvalidatedRequestValues (this);
+				return this.unvalidatedRequestValues;
+			}
+		}
 
+		[MonoTODO]
+		public void Abort ()
+		{
+			System.Console.Error.WriteLine ("HttpRequest.Abort: {0}", System.Environment.StackTrace);
+		}
+#endif
 		internal bool BrowserMightHaveSpecialWriter {
 			get {
 				return (browser_capabilities != null 
@@ -443,16 +462,25 @@ namespace System.Web
 				content_type = value;
 			}
 		}
+		internal HttpCookieCollection CookiesNoValidation
+		{
+			get {
+				HttpCookieCollection cookies;
+				if (worker_request == null) {
+					cookies = new HttpCookieCollection ();
+				} else {
+					string cookie_hv = worker_request.GetKnownRequestHeader (HttpWorkerRequest.HeaderCookie);
+					cookies = new HttpCookieCollection (cookie_hv);
+				}
+				return cookies;
+			}
+		}
 
 		internal HttpCookieCollection CookiesNoValidation {
 			get {
-				if (cookies_unvalidated == null) {
-					if (worker_request == null) {
-						cookies_unvalidated = new HttpCookieCollection ();
-					} else {
-						string cookie_hv = worker_request.GetKnownRequestHeader (HttpWorkerRequest.HeaderCookie);
-						cookies_unvalidated = new HttpCookieCollection (cookie_hv);
-					}
+
+				if (cookies == null) {
+					cookies = CookiesNoValidation;
 				}
 
 				return cookies_unvalidated;
@@ -1250,18 +1278,16 @@ namespace System.Web
 			}
 		}
 
-        	internal string PathInfoNoValidation {
-        		get {
-        			if (path_info_unvalidated == null) {
-					if (worker_request == null)
-						return String.Empty;
-
-					path_info_unvalidated = worker_request.GetPathInfo () ?? String.Empty;
-                		}
-
-                		return path_info_unvalidated;
-        		}
-        	}
+		internal string PathInfoNoValidation
+		{
+			get
+			{
+				if (worker_request == null)
+					return String.Empty;
+				string path_info = worker_request.GetPathInfo () ?? String.Empty;
+				return path_info;
+			}
+		}
 
 		public string PathInfo {
 			get {
@@ -1370,26 +1396,26 @@ namespace System.Web
 			}
 		}
 
-		internal string RawUrlUnvalidated {
-			get {
-				if (raw_url_unvalidated == null) {
-					if (worker_request != null)
-						raw_url_unvalidated = worker_request.GetRawUrl ();
-					else
-						raw_url_unvalidated = UrlComponents.Path + UrlComponents.Query;
-					
-					if (raw_url_unvalidated == null)
-						raw_url_unvalidated = String.Empty;
-				}
+		internal string RawUrlUnvalidated
+		{
+			get
+			{
+				string raw_url;
+				if (worker_request != null)
+					raw_url = worker_request.GetRawUrl ();
+				else
+					raw_url = UrlComponents.Path + UrlComponents.Query;
 
-				return raw_url_unvalidated;
+				if (raw_url == null)
+					raw_url = String.Empty;
+				return raw_url;
 			}
 		}
 
 		public string RawUrl {
 			get {
 				if (raw_url == null) {
-					raw_url = RawUrlUnvalidated;
+					raw_url = this.RawUrlUnvalidated;
 #if NET_4_0
 					if (validateRequestNewMode) {
 						RequestValidator validator = RequestValidator.Current;

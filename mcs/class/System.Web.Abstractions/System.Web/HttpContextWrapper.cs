@@ -185,7 +185,7 @@ namespace System.Web
 
 		public override object GetService (Type serviceType)
 		{
-			return ((IServiceProvider)w).GetService (serviceType);
+			return ((IServiceProvider) w).GetService (serviceType);
 		}
 #if NET_4_0
 		public override void RemapHandler (IHttpHandler handler)

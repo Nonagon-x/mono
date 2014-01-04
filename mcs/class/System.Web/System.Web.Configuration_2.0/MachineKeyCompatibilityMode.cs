@@ -30,7 +30,10 @@ namespace System.Web.Configuration {
 
 	public enum MachineKeyCompatibilityMode {
 		Framework20SP1 = 0,
-		Framework20SP2 = 1
+		Framework20SP2 = 1,
+#if NET_4_5
+		Framework45 = 2
+#endif
 	}
 }
 

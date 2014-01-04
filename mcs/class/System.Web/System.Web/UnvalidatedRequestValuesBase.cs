@@ -1,10 +1,8 @@
 //
-// System.Web.UnvalidatedRequestValuesBase.cs
+// UnvalidatedRequestValuesBase.cs
 //
-// Author:
-//   Mike Morano <mmorano@mikeandwan.us>
-//
-
+// Authors:
+//	Matthias Dittrich <matthi.d@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,10 +23,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Specialized;
-
+using System.Runtime;
 
 namespace System.Web {
 	public abstract class UnvalidatedRequestValuesBase {
@@ -37,54 +34,28 @@ namespace System.Web {
 			throw new NotImplementedException ();
 		}
 
-		public virtual HttpCookieCollection Cookies 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual NameValueCollection Form { get { NotImplemented (); return null; } }
 
-		public virtual HttpFileCollection Files 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual NameValueCollection QueryString { get { NotImplemented (); return null; } }
 
-		public virtual NameValueCollection Form 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual NameValueCollection Headers { get { NotImplemented (); return null; } }
 
-		public virtual NameValueCollection Headers 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual HttpCookieCollection Cookies { get { NotImplemented (); return null; } }
 
-		public virtual string this[string field] 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual HttpFileCollectionBase Files { get { NotImplemented (); return null; } }
 
-		public virtual string Path 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual string RawUrl { get { NotImplemented (); return null; } }
 
-		public virtual string PathInfo 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual string Path { get { NotImplemented (); return null; } }
 
-		public virtual NameValueCollection QueryString 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual string PathInfo { get { NotImplemented (); return null; } }
 
-		public virtual string RawUrl 
-		{ 
-			get { NotImplemented (); return null; }
-		}
+		public virtual string this [string field] { get { NotImplemented (); return null; } }
 
-		public virtual Uri Url 
-		{ 
-			get { NotImplemented (); return null; }
+		public virtual Uri Url { get { NotImplemented (); return null; } }
+
+		protected UnvalidatedRequestValuesBase ()
+		{
 		}
 	}
 }

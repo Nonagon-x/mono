@@ -1,10 +1,8 @@
 //
-// System.Web.UnvalidatedRequestValuesWrapper.cs
+// UnvalidatedRequestValuesWrapper.cs
 //
-// Author:
-//   Mike Morano <mmorano@mikeandwan.us>
-//
-
+// Authors:
+//	Matthias Dittrich <matthi.d@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,68 +23,68 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
 using System;
 using System.Collections.Specialized;
 
-
 namespace System.Web {
 	public class UnvalidatedRequestValuesWrapper : UnvalidatedRequestValuesBase {
-		UnvalidatedRequestValues rv;
+		private readonly UnvalidatedRequestValues u;
 
-		public UnvalidatedRequestValuesWrapper (UnvalidatedRequestValues requestValues) 
+		public override NameValueCollection Form
 		{
-			rv = requestValues;
+			get { return this.u.Form; }
 		}
 
-		public override HttpCookieCollection Cookies 
-		{ 
-			get { return rv.Cookies; }
+		public override NameValueCollection QueryString
+		{
+			get { return this.u.QueryString; }
 		}
 
-		public override HttpFileCollection Files 
-		{ 
-			get { return rv.Files; }
+		public override NameValueCollection Headers
+		{
+			get { return this.u.Headers; }
 		}
 
-		public override NameValueCollection Form 
-		{ 
-			get { return rv.Form; }
+		public override HttpCookieCollection Cookies
+		{
+			get { return this.u.Cookies; }
 		}
 
-		public override NameValueCollection Headers 
-		{ 
-			get { return rv.Headers; }
+		public override HttpFileCollectionBase Files
+		{
+			get { return (HttpFileCollectionBase) new HttpFileCollectionWrapper (this.u.Files); }
 		}
 
-		public override string this[string field] 
-		{ 
-			get { return rv[field]; }
+		public override string RawUrl
+		{
+			get { return this.u.RawUrl; }
 		}
 
-		public override string Path 
-		{ 
-			get { return rv.Path; }
+		public override string Path
+		{
+			get { return this.u.Path; }
 		}
 
-		public override string PathInfo 
-		{ 
-			get { return rv.PathInfo; }
+		public override string PathInfo
+		{
+			get { return this.u.PathInfo; }
 		}
 
-		public override NameValueCollection QueryString 
-		{ 
-			get { return rv.QueryString; }
+		public override string this [string field]
+		{
+			get { return this.u [field]; }
 		}
 
-		public override string RawUrl 
-		{ 
-			get { return rv.RawUrl; }
+		public override Uri Url
+		{
+			get { return this.u.Url; }
 		}
 
-		public override Uri Url 
-		{ 
-			get { return rv.Url; }
+		public UnvalidatedRequestValuesWrapper (UnvalidatedRequestValues requestValues)
+		{
+			if (requestValues == null)
+				throw new ArgumentNullException ("requestValues");
+			this.u = requestValues;
 		}
 	}
 }
