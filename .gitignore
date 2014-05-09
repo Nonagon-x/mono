@@ -120,3 +120,11 @@ mono.spec
 mono-core.spec
 tmpinst-dir.stamp
 
+
+mono/metadata/test-gc-memfuncs
+
+mono/metadata/test-sgen-qsort
+
+external/ikdasm/
+
+test-driver
