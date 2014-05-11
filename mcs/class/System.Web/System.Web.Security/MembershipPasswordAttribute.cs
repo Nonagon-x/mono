@@ -1,107 +1,122 @@
-//
-// System.Web.Security.MembershipPasswordAttribute
-//
-// Authors:
-// Martin Thwaites (github@my2cents.co.uk)
-//
-// (C) 2014 Martin Thwaites
-//
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Security;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace System.Web.Security
 {
-	[AttributeUsageAttribute (AttributeTargets.Property|AttributeTargets.Field|AttributeTargets.Parameter, AllowMultiple = false)]
+	[AttributeUsage(
+		AttributeTargets.Property | AttributeTargets.Field | 
+		AttributeTargets.Parameter, AllowMultiple = false)]
 	public class MembershipPasswordAttribute : ValidationAttribute
 	{
-		public string MinNonAlphanumericCharactersError { get; set; }
-		public string MinPasswordLengthError { get; set; }
-		public int MinRequiredNonAlphanumericCharacters { get; set; }
-		public int MinRequiredPasswordLength { get; set; }
-		public string PasswordStrengthError { get; set; }
-		public string PasswordStrengthRegularExpression { get; set; }
-		public Type ResourceType { get; set; }
+		private Int32? _minRequiredPasswordLength;
+		private Int32? _minRequiredNonAlphanumericCharacters;
+		private String _passwordStrengthRegularExpression;
 
-		public MembershipPasswordAttribute ()
+		private readonly String _minRequiredPasswordLengthError =
+			"{0} must have at least {1} characters";
+
+		private readonly String _minNonAlphanumericCharactersError = 
+			"{0} must have at least {1} special characters";
+
+		private readonly String _passwordStrengthError = 
+			"{0} is week";
+
+		public MembershipPasswordAttribute()
 		{
-			if (Membership.Provider != null)
-			{
-				MinRequiredNonAlphanumericCharacters = Membership.Provider.MinRequiredNonAlphanumericCharacters;
-				MinRequiredPasswordLength = Membership.Provider.MinRequiredPasswordLength;
-				PasswordStrengthRegularExpression = Membership.Provider.PasswordStrengthRegularExpression;
-			}
-			else
-			{
-				MinRequiredPasswordLength = 7;
-				MinRequiredNonAlphanumericCharacters = 1;
-				PasswordStrengthRegularExpression = @"(?=.{6,})(?=(.*\d){1,})(?=(.*\W){1,})";
-			}
-			MinNonAlphanumericCharactersError = "The '{0}' field is an invalid password. Password must have {1} or more non-alphanumeric characters.";
-			MinPasswordLengthError = "The '{0}' field is an invalid password. Password must have {1} or more characters.";
-			PasswordStrengthError = "The '{0}' field is an invalid password. It does not meet the password strength requirements";
-			ErrorMessage = "The field {0} is invalid.";
+			MinPasswordLengthError = _minRequiredPasswordLengthError;
+			MinNonAlphanumericCharactersError = _minNonAlphanumericCharactersError;
+			PasswordStrengthError = _passwordStrengthError;
 		}
 
-		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
+		public int MinRequiredPasswordLength
 		{
-			var password = value as string;
-			var isError = false;
-			if (string.IsNullOrEmpty(password))
-				return null;
+			get
+			{
+				return !_minRequiredPasswordLength.HasValue ? 
+					Membership.Provider.MinRequiredPasswordLength : 
+					_minRequiredPasswordLength.Value;
+			}
+			set
+			{
+				_minRequiredPasswordLength = value;
+			}
+		}
 
-			var errorMessage = string.Empty;
-			var parameter = 0;
-			var pattern = new Regex (@"\W|_");
+		public int MinRequiredNonAlphanumericCharacters
+		{
+			get
+			{
+				return !_minRequiredNonAlphanumericCharacters.HasValue ? 
+					Membership.Provider.MinRequiredNonAlphanumericCharacters : 
+					_minRequiredNonAlphanumericCharacters.Value;
+			}
+			set
+			{
+				_minRequiredNonAlphanumericCharacters = value;
+			}
+		}
 
-			if (MinRequiredPasswordLength > 0 && 
-				password.Length < MinRequiredPasswordLength) {
-				errorMessage = MinPasswordLengthError;
-				parameter = MinRequiredPasswordLength;
-				isError = true;
+		public String PasswordStrengthRegularExpression
+		{
+			get
+			{
+				return _passwordStrengthRegularExpression ?? 
+					Membership.Provider.PasswordStrengthRegularExpression;
+			}
+			set
+			{
+				_passwordStrengthRegularExpression = value;
+			}
+		}
+
+		public Type ResourceType { get; set; }
+		public String MinPasswordLengthError { get; set; }
+		public String MinNonAlphanumericCharactersError { get; set; }
+		public String PasswordStrengthError { get; set; }
+
+		protected override ValidationResult IsValid(Object value, ValidationContext validationContext)
+		{
+			var password = (value as String) ?? String.Empty;
+			var displayName = String.Empty;
+
+			if(validationContext != null)
+			{
+				displayName = validationContext.MemberName;
+				if (validationContext.DisplayName != null)
+					displayName = validationContext.DisplayName;
 			}
 
-			if (!isError && MinRequiredNonAlphanumericCharacters > 0 &&
-			    pattern.Matches (password).Count < MinRequiredNonAlphanumericCharacters) {
-				errorMessage = MinNonAlphanumericCharactersError;
-				parameter = MinRequiredNonAlphanumericCharacters;
-				isError = true;
+			if (String.IsNullOrEmpty(password))
+				return ValidationResult.Success;
+
+			if (password.Length < MinRequiredPasswordLength)
+			{
+				return new ValidationResult(String.Format(
+					MinPasswordLengthError, displayName, MinRequiredPasswordLength));
 			}
 
-			if (!isError && !string.IsNullOrEmpty (PasswordStrengthRegularExpression) && 
-				new Regex (PasswordStrengthRegularExpression).IsMatch (password)) {
-				errorMessage = PasswordStrengthError;
-				isError = true;
+			if (MinRequiredNonAlphanumericCharacters > 0)
+			{
+				var nonAlphaNumCount = password.Count(c => !Char.IsLetterOrDigit(c));
+
+				if (nonAlphaNumCount < MinRequiredNonAlphanumericCharacters)
+				{
+					return new ValidationResult(String.Format(
+						MinNonAlphanumericCharactersError, displayName, MinRequiredPasswordLength));
+				}
 			}
 
-			if (isError) {
-				if (validationContext == null)
-					return new ValidationResult("error");
-
-				return new ValidationResult (
-					string.Format (errorMessage, validationContext.DisplayName, parameter), 
-							new[] {validationContext.MemberName});
+			if (PasswordStrengthRegularExpression != null)
+			{
+				var regex = new Regex(PasswordStrengthRegularExpression);
+				if (!regex.IsMatch(password))
+				{
+					return new ValidationResult(String.Format(
+						PasswordStrengthError, displayName, MinRequiredPasswordLength));
+				}
 			}
 
 			return ValidationResult.Success;
