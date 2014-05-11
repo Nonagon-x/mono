@@ -471,6 +471,7 @@
     <Compile Include="System.Web.Security\MachineKeyProtection.cs" />
     <Compile Include="System.Web.Security\Membership.cs" />
     <Compile Include="System.Web.Security\MembershipHelper.cs" />
+    <Compile Include="System.Web.Security\MembershipPasswordAttribute.cs" />
     <Compile Include="System.Web.Security\PassportAuthenticationEventArgs.cs" />
     <Compile Include="System.Web.Security\PassportAuthenticationEventHandler.cs" />
     <Compile Include="System.Web.Security\PassportAuthenticationModule.cs" />
@@ -1352,7 +1353,8 @@
     <Compile Include="System.Web\WebROCollection.cs" />
     <Compile Include="System.Web\WebSysDescriptionAttribute.cs" />
     <Compile Include="System.Web\XmlSiteMapProvider.cs" />
-    <Compile Include="System.Web\UplevelHelper.cs" />  </ItemGroup>
+    <Compile Include="System.Web\UplevelHelper.cs" />
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
