@@ -52,6 +52,7 @@
     <Compile Include="Test\System.ComponentModel.DataAnnotations\EnumDataTypeAttributeTest.cs" />
     <Compile Include="Test\System.ComponentModel.DataAnnotations\FilterUIHintAttributeTest.cs" />
     <Compile Include="Test\System.ComponentModel.DataAnnotations\RangeAttributeTest.cs" />
+    <Compile Include="Test\System.ComponentModel.DataAnnotations\UrlAttribute.cs" />
     <Compile Include="Test\System.ComponentModel.DataAnnotations\RegularExpressionAttributeTest.cs" />
     <Compile Include="Test\System.ComponentModel.DataAnnotations\RequiredAttributeTest.cs" />
     <Compile Include="Test\System.ComponentModel.DataAnnotations\StringLengthAttributeTest.cs" />
@@ -59,7 +60,8 @@
     <Compile Include="Test\System.ComponentModel.DataAnnotations\ValidationAttributeTest.cs" />
     <Compile Include="Test\System.ComponentModel.DataAnnotations\ValidationContextTest.cs" />
     <Compile Include="Test\System.ComponentModel.DataAnnotations\ValidationResultTest.cs" />
-    <Compile Include="Test\System.ComponentModel.DataAnnotations\ValidatorTest.cs" />  </ItemGroup>
+    <Compile Include="Test\System.ComponentModel.DataAnnotations\ValidatorTest.cs" />
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,8 +1,14 @@
 #include net_4_0_System.Web.dll.sources
 
+../System.ComponentModel.DataAnnotations/System.ComponentModel.DataAnnotations/ValidationException.cs
+../System.ComponentModel.DataAnnotations/System.ComponentModel.DataAnnotations/ValidationContext.cs
+../System.ComponentModel.DataAnnotations/System.ComponentModel.DataAnnotations/ValidationResult.cs
+../System.ComponentModel.DataAnnotations/System.ComponentModel.DataAnnotations/ValidationAttribute.cs
+
 System.Web/MimeMapping.cs
 System.Web/HttpTaskAsyncHandler.cs
 System.Web/UnvalidatedRequestValues.cs
 System.Web/UnvalidatedRequestValuesBase.cs
 System.Web/UnvalidatedRequestValuesWrapper.cs
 System.Web/ReadEntityBodyMode.cs
+System.Web.Security/MembershipPasswordAttribute.cs
