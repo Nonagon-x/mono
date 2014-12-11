@@ -1,6 +1,9 @@
 Mono is a software platform designed to allow developers to easily create cross platform applications.
 Mono is an open source implementation of Microsoft's .NET Framework based on the ECMA standards for C# and the Common Language Runtime.
 
+To sync all branches to the folked
+** http://stackoverflow.com/questions/15779740/how-to-update-my-fork-to-have-the-same-branches-and-tags-as-the-original-reposit **
+
 [![Build Status](http://monojenkins.cloudapp.net/job/Mono/badge/icon)](http://monojenkins.cloudapp.net/job/Mono/)
 
 1. [Installation](#compilation-and-installation)
